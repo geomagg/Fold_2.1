@@ -1,0 +1,943 @@
+#!/usr/bin/env python
+import  csv
+import matplotlib.pyplot as plt
+from matplotlib import colors
+#from scipy.stats import gaussian_kde
+import numpy as np
+from tkinter import *
+import chart_studio.plotly as py
+import math
+import struct
+import binascii
+import  tkinter as tk
+from tkinter import*
+import tkinter.filedialog
+from tkinter.filedialog import askopenfilename
+from time import sleep
+import matplotlib.mlab as mlab
+import tkinter.messagebox
+from tkinter import messagebox
+import os
+
+#----------------------------------------------------
+root = Tk()
+root.title('Fold Attributes')
+
+
+def NewFile():
+    tkMessageBox.showinfo("Computing the fold", "GO")
+    print ("New File!")
+def OpenFile():
+    name = askopenfilename()
+    print (name)
+def About():
+    tkinter.messagebox.showinfo("Version 1.04", "OK")
+    print ("This is a simple exa")
+menu = Menu(root)
+root.config(menu=menu)
+filemenu = Menu(menu)
+menu.add_cascade(label="File",font=("Sans Bold", 9), menu=filemenu)
+filemenu.add_command(label="New", command=NewFile)
+filemenu.add_command(label="Open...", command=OpenFile)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=root.quit)
+
+helpmenu = Menu(menu)
+menu.add_cascade(label="Help",font=("Sans Bold", 9), menu=helpmenu)
+helpmenu.add_command(label="About...", command=About)
+
+#-------------------------------------
+photo = PhotoImage(file='geomagg3a.png')
+photo_label = Label(root, image=photo)
+photo_label.image = photo 
+photo_label.grid()
+
+Label(root, text='Foldmap 2.06  ',font=("Sans Bold", 10)).grid(row=0,column=5,sticky=NE)
+
+Frame(root, bg="black",width=3, height=3)
+
+Label(root, text="-------------------------------------------").grid(row=2, column=3, sticky=E)
+Label(root, text="  CMP computation parameters  ",font=("Sans Bold", 10)).grid(row=2, column=4, sticky=E)
+Label(root, text="---------------------------------------").grid(row=2, column=5, sticky=E)
+Label(root, text="       ").grid(row=3, column=3, sticky=E)
+Label(root, text="Water Depth (m):      ",font=("Sans Bold", 9)).grid(row=3, column=3,sticky='w')
+WaterDepth = DoubleVar()
+Entry(root, width=8, textvariable=WaterDepth,font=("Sans Bold", 9)).grid(row=3, column=3,sticky='e')
+WaterDepth.set("0")
+Label(root, text="Target Depth (m): ",font=("Sans Bold", 9)).grid(row=3, column=5,sticky='w')
+TargetDepth = DoubleVar()
+Entry(root, width=8, textvariable=TargetDepth,font=("Sans Bold", 9)).grid(row=3, column=5,sticky='e')
+TargetDepth.set("2000")
+Label(root, text="Vp/Vs: ",font=("Sans Bold", 9)).grid(row=4, column=3,sticky='w')
+VpVs = DoubleVar()
+Entry(root, width=8, textvariable=VpVs,font=("Sans Bold", 9)).grid(row=4, column=3,sticky='e')
+VpVs.set("3")
+Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=4, column=5,sticky='w')
+CompOffMax = DoubleVar()
+Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=4, column=5,sticky='e')
+CompOffMax.set("8000")
+
+#---------------Raio buttoms wavefield------------------------------------------------
+Label(root, text="       ").grid(row=7, column=3, sticky=E)
+
+v = IntVar()
+v.set(0)  
+languages = [
+    ("Up-coming field"),
+    ("Mirror field"),
+    ("PS field"),
+
+]
+def ShowChoice():
+    print(v.get())
+Label(root, text="""    """,font=("Sans Bold", 10),fg = 'blue',
+         padx = 20).grid(row =3, column=4) #,sticky=W)
+for val, language in enumerate(languages):
+            Radiobutton(root, 
+                  text=language,
+                  padx = 40, 
+                  variable=v, 
+                  command=ShowChoice,
+                  value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =4+val, column=4, sticky=W)
+
+#------------------------------------------------
+
+var10 = IntVar()
+var10.set(1)
+Checkbutton(root, text=' Read previous CMP file   ',font=("Sans Bold", 9), variable=var10 ).grid(row =7, column=0, sticky=W)
+
+
+Label(root, text="       ").grid(row=7, column=3, sticky=E)
+Label(root, text="---------------------------------------------").grid(row=8, column=3, sticky=E)
+Label(root, text="  FOLD computation parameters  ",font=("Sans Bold", 10)).grid(row=8, column=4, sticky=E)
+Label(root, text="-----------------------------------------").grid(row=8, column=5, sticky=E)
+Label(root, text="       ").grid(row=9, column=3, sticky=E)
+
+#poRRA
+Label(root, text="Bin size X : ",font=("Sans Bold", 9)).grid(row=10, column=3, sticky=W)
+Bx = DoubleVar()
+Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=10, column=3, sticky=E)
+Bx.set("100")
+
+# Aprendi como alterar o outro campo ao preencher um !!!!!!!!!!!!!
+#Label(root, text="  Angle (degrees): ",font=("Sans Bold", 9)).grid(row=10, column=4, sticky=W)
+#angulo = DoubleVar()
+#Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=10, column=4, sticky=E)
+#angulo.set("0.")
+
+Label(root, text="  Angle (degrees): ",font=("Sans Bold", 9)).grid(row=10, column=4, sticky=W)
+angulo = DoubleVar()
+Entry(root, width=8, textvariable=angulo,font=("Sans Bold", 9)).grid(row=10, column=4, sticky=E)
+angulo.set("0.")
+
+
+Label(root, text="Bin size Y: ",font=("Sans Bold", 9)).grid(row=10, column=5, sticky=W)
+By = DoubleVar()
+Entry(root, width=8, textvariable=By,font=("Sans Bold", 9)).grid(row=10, column=5, sticky=E)
+By.set("100")
+Label(root, text="Node space X (m): ",font=("Sans Bold", 9)).grid(row=11, column=3, sticky=W)
+NodeX = DoubleVar()
+Entry(root, width=8, textvariable=NodeX,font=("Sans Bold", 9)).grid(row=11, column=3, sticky=E)
+NodeX.set("400")
+Label(root, text="Node space Y (m): ",font=("Sans Bold", 9)).grid(row=11, column=5, sticky=W)
+NodeY = DoubleVar()
+Entry(root, width=8, textvariable=NodeY,font=("Sans Bold", 9)).grid(row=11, column=5, sticky=E)
+NodeY.set("400")
+Label(root, text="Range Maximum X (m): ",font=("Sans Bold", 9)).grid(row=12, column=3, sticky=W)
+RangeMax = DoubleVar()
+Entry(root, width=8, textvariable=RangeMax,font=("Sans Bold", 9)).grid(row=12, column=3, sticky=E)
+RangeMax.set("8000")
+Label(root, text="Range Minimum Y (m): ",font=("Sans Bold", 9)).grid(row=12, column=5, sticky=W)
+RangeMin = DoubleVar()
+Entry(root, width=8, textvariable=RangeMin,font=("Sans Bold", 9)).grid(row=12, column=5, sticky=E)
+RangeMin.set("0")
+Label(root, text="---------------------------------------------").grid(row=16, column=3, sticky=E)
+Label(root, text="  FOLD plot options               ",font=("Sans Bold", 10)).grid(row=16, column=4, sticky=E)
+Label(root, text="---------------------------------------------").grid(row=16, column=5, sticky=E)
+
+#--------------------------Fold rario buttoms-----------------------------------
+Label(root, text="       ").grid(row=7, column=3, sticky=E)
+
+vv = IntVar()
+vv.set(0)
+languages = [
+    ("Rectangular binning"),
+    ("Hexagonal  binning")]
+
+
+plotopt = IntVar()
+
+if vv.get() == 0:
+   plotopt.set(0)
+   kstate = 'normal'
+
+lang = [
+    ("Hit counts"),
+    ("Min-Offset"),
+    ("Max-Offset"),
+    ("Mean-Offset"),
+]
+
+def ShowChoice():
+    print(vv.get())
+
+Label(root, text="""Binning options""",font=("Sans Bold", 12),fg = 'blue',
+         padx = 20).grid(row =18, column=0,sticky=W)
+for val, language in enumerate(languages):
+            Radiobutton(root, 
+                  text=language,
+                  padx = 40, 
+                  variable=vv, 
+                  command=ShowChoice,
+                  value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =19+val, column=0,sticky=W) #, state=kstate)
+
+def ShowChoiceFold():
+    print(plotopt.get())
+    if plotopt.get()==1:
+       kstate='enable'
+
+
+Label(root, text="""Hexagonl bin fold  options""",font=("Sans Bold", 12),fg = 'blue',
+         padx = 20).grid(row =22, column=0,sticky=W)
+for val, lang in enumerate(lang):
+            Radiobutton(root, 
+                  text=lang,
+                  padx = 40, 
+                  variable=plotopt, 
+                  command=ShowChoiceFold,
+                  value=val,font=("Sans Bold", 9),fg = 'blue', state=kstate).grid(row =23+val, column=0,sticky=W)
+
+#--------------------------------------------------------------------------
+
+var1 = IntVar()
+Checkbutton(root, text='   Plot Nodes              ',font=("Sans Bold", 9), onvalue=1., variable=var1 ).grid(row =22, column=5, sticky=W)
+var1a = IntVar()
+Checkbutton(root, text='   Plot Shots              ',font=("Sans Bold", 9), variable=var1a ).grid(row =23, column=5, sticky=W)
+var1b = IntVar()
+Checkbutton(root, text='   Plot CMPs              ',font=("Sans Bold", 9), variable=var1b ).grid(row =24, column=5, sticky=W)
+var1c = IntVar()
+var1c.set(1)
+Checkbutton(root, text='   Plot FOLD              ',font=("Sans Bold", 9), variable=var1c ).grid(row =25, column=5, sticky=W)
+
+
+
+
+#--------------------------------------------------------------------------
+
+def show():
+    print( "You entered:")
+    print( "Bin size X (ft/m): "+ str(Bx.get()))
+    print( "Bin size Y (ft/m): "+ str(By.get()))
+    print( "Water Depth (m): "+ str(WaterDepth.get()))
+    print( "Target Depth (m): "+ str(TargetDepth.get()))
+    print( "Vp/Vs: "+ str(VpVs.get()))
+    print( "Max Offset for CMP computation: "+ str(CompOffMax.get()))
+    print( "Maximum Azimuth (degrees): "+ str(MaxAz.get()))
+    print( "Minimum Azimuth (degrees): "+ str(MinAz.get()))
+    print( "Node space X (m): "+ str(NodeX.get()))
+    print( "Node space Y (m): "+ str(NodeY.get()))
+
+#Button(root,text="SHOW",font=("Sans Bold", 9), command=show).grid(row=36, column=6,sticky=E )
+#Button(root,text="STOP",font=("Sans Bold", 9), command=exit).grid(row=36, column=5 ,sticky=W )
+
+#------------------------End of initial GUI -----------------------------------------------
+xr,xs =[],[]
+yr,ys =[],[]
+
+with open('nodes.txt','r') as f1:
+     reader = csv.reader(f1, delimiter=' ')
+     next(reader)
+     for row in reader:
+      xr.append(row[0])
+      yr.append(row[1])
+
+with open('shots.txt','r') as f2:
+     reader = csv.reader(f2, delimiter=' ')
+     next(reader)
+     for row in reader:
+      xs.append(row[0])
+      ys.append(row[1])
+
+def compcmp():
+
+ global r1,r2,r5,r6,r7,r8,r9,r10,ASTATUS
+
+ ASTATUS='FALSE'
+ a1=np.array(xs, dtype=float)
+ a2=np.array(ys, dtype=float)
+ a3=np.array(xr, dtype=float)
+ a4=np.array(yr, dtype=float)
+ 
+ TD=float(TargetDepth.get())
+ WD=float(WaterDepth.get())
+ vpvs=VpVs.get() 
+ maxoff=RangeMax.get()  
+ cmpmaxoff=CompOffMax.get()
+
+ opt =v.get()
+ if var10.get() == 0:
+  c=Cmp(a1,a2,a3,a4,WD,TD,vpvs,cmpmaxoff,opt)
+  print (c.getnnodes())
+  print (c.getnshots())
+   
+
+ if v.get()==0:
+   if os.path.exists('cmp__.npz'):
+     cmp = np.load('cmp__.npz')
+     ASTATUS='TRUE'
+   else:
+     tkinter.messagebox.showwarning("CMP file does not exist","Please compute CMP file")
+
+ if v.get()==1:
+   if os.path.exists('cmp1__.npz'):
+     cmp = np.load('cmp1__.npz')
+     ASTATUS='TRUE'
+   else:
+     tkinter.messagebox.showwarning("CMP file does not exist","Please compute CMP file")
+
+ if v.get()==2:
+   if os.path.exists('cmp2__.npz'):
+     cmp = np.load('cmp2__.npz')
+     ASTATUS='TRUE'
+   else:
+     tkinter.messagebox.showwarning("CMP file does not exist","Please compute CMP file")
+
+ if ASTATUS == 'TRUE':
+     L=PB(400,20)
+     L.settitle("Reading CMP files")
+     L.open()
+     upt=0
+     progress=1./11
+     upt=upt+progress
+     L.update(upt)
+     r1=cmp['cmp1x']
+     upt=upt+progress
+     L.update(upt)
+     r2=cmp['cmp1y']
+     upt=upt+progress
+     L.update(upt)
+     r7 =cmp['offset'] 
+     upt=upt+progress
+     L.update(upt)
+     r8=cmp['azim']
+     L.close()
+
+     global x1,x2,y1,y2,ppick,RunFlag
+     x1=np.min(r1)
+     x2=np.max(r1)
+     y1=np.min(r2)
+     y2=np.max(r2)
+     ppick=0
+     RunFlag=1
+          
+     b1.bind('<Button-1>' , gplotf)
+     b2.bind('<Button-1>' , fold)
+     b3.bind('<Button-1>' , plot1)
+     b4.bind('<Button-1>' , azimuth)
+
+
+     root.bind(fold)
+     root.bind(gplotf)
+     root.bind(plot1)
+     root.bind(azimuth)
+
+
+     tkinter.messagebox.showinfo("CMP data read", "Procede with the fold computation             ")
+
+#     b2.unbind('<Button-1>')
+     ASTATUS='FALSE'
+
+
+#-------------- FOLD PLOT -------------------------------------------------------------------------
+def fold(event):
+
+ rx=(RangeMax.get()-RangeMin.get())/(2*float(NodeX.get()))
+ ry=(RangeMax.get()-RangeMin.get())/(2*float(NodeY.get()))
+ NominalFold= rx*ry*np.pi
+
+ print ('rx, ry', rx,ry, np.pi)
+ print ('Nominal Fold @ Max offset is:', NominalFold)
+
+ if v.get()==0:
+  Title1='Up-coming field'
+ if v.get()==1:
+  Title1='Mirror field'
+ if v.get()==2:
+  Title1='PS field'
+
+ mmax=RangeMax.get()
+ mmin=RangeMin.get()
+
+# condition coming form the max offset 
+ condition = r7<=mmax
+
+ cmp1x=np.extract(condition,r1)
+ cmp1y=np.extract(condition,r2)
+ offset=np.extract(condition,r7)
+ azim=np.extract(condition,r8)
+
+ xmax=x2 
+ ymax=y2 
+ xmin=x1 
+ ymin=y1 
+
+ axr,ayx=[],[]
+ axs,ays=[],[]
+ aaxr,ayx=[],[]
+ aaxs,ays=[],[]
+
+ xx,yy=[],[]
+ xxrot,yyrot=[],[]
+ oof=[]
+
+ axs=np.array(xs, dtype=float)
+ ays=np.array(ys, dtype=float)
+ axr=np.array(xr, dtype=float)
+ ayr=np.array(yr, dtype=float)
+ ang=angulo.get()
+ ang = ang * math.pi/180.
+
+ nxr =len(axr)
+ nxs =len(axs)
+ aaxr=axr
+ aayr=ayr
+ aaxs=axs
+ aays=ays
+
+ i=0
+#PORRA 
+ while i < nxr:
+     aaxr[i]= -ayr[i]*math.sin(ang)+axr[i]*math.cos(ang)
+     aayr[i]= ayr[i]*math.cos(ang)+axr[i]*math.sin(ang)
+     i += 1 
+
+ i=0
+ while i < nxs:
+     aaxs[i]= -ays[i]*math.sin(ang)+axs[i]*math.cos(ang)
+     aays[i]= ays[i]*math.cos(ang)+axs[i]*math.sin(ang)
+     i += 1
+
+
+# if ppick==1:
+#  M=PB(300,20)
+#  M.settitle("Selectin CMPs")
+#  M.open()
+#  upt=0
+#  progress=(1./len(cmp1x))*100
+#  count=0
+
+#  for i in range (0,len(cmp1x)):
+#    if cmp1x[i] >=x1:
+#      if cmp1x[i] <x2:
+#        if cmp1y[i] >=y1:
+#           if  cmp1y[i]<y2:
+#             xx.append(cmp1x[i])
+#             yy.append(cmp1y[i])
+#             oof.append(offset[i])
+
+#    if i == count:
+#     count+=100000
+#     upt=upt+progress
+#     M.update(upt)
+ 
+#  M.close()
+ if ppick==0:
+             xx=cmp1x
+             yy=cmp1y
+             oof=offset
+
+ nx = int(( np.max(xx)-np.min(xx))/Bx.get())
+ ny = int( ( np.max(yy)-np.min(yy))/By.get())
+
+ M=PB(300,20)
+ M.settitle("Generating fold plots")
+ M.open()
+ upt=0
+ progress=1./10
+ upt=upt+progress
+ M.update(upt)
+
+
+ fig, ax = plt.subplots(figsize=(10,7 ))
+
+# ang=angulo.get()
+# ang = ang * math.pi/180.
+ i=0
+ xxrot=xx
+ yyrot=yy
+ progress1=7./len(xx)
+ while i < len(xx):
+     xxrot[i]= float(-yy[i]*math.sin(ang)+xx[i]*math.cos(ang))
+     yyrot[i]= float(yy[i]*math.cos(ang)+xx[i]*math.sin(ang))
+     i += 1
+ upt=upt+3*progress
+ M.update(upt)
+
+ xmin=np.min(xxrot)
+ xmax=np.max(xxrot)
+ ymin=np.min(yyrot)
+ ymax=np.max(yyrot)
+
+ nx = int((xmax-xmin)/Bx.get())+1
+ ny = int((ymax-ymin)/By.get())+1
+ nxtest =int(ny*math.sqrt(3))
+
+
+ xmin=np.min(aaxs)
+ xmax=np.max(aaxs)
+ ymin=np.min(aays)
+ ymax=np.max(aays)
+
+
+# nx = int((xmax-xmin)/Bx.get())+1
+# ny = int((ymax-ymin)/By.get())+1
+# nxtest =int(ny*math.sqrt(3))
+
+ nnx =nx*ny
+ if var1c.get() == 1:
+
+   if vv.get()==0:
+     hb = ax.hist2d(xxrot, yyrot , bins = [nx,ny], cmap='jet')
+     Title2 = '  Rectangulr binning'
+   else:
+     if plotopt.get() == 0:
+        hb = ax.hexbin(xxrot, yyrot,  mincnt=1,reduce_C_function=np.sum, gridsize=(nx,ny), marginals=False, cmap='jet')
+        Title2 = ' HitCount'
+     if plotopt.get() == 1:
+        vmax=NodeX.get()
+        Title2= ' Min Offset'
+        hb = ax.hexbin(xxrot, yyrot, vmax=vmax,  C=oof, reduce_C_function=np.min,  gridsize=(nx,ny), marginals=False, cmap='jet')
+     if plotopt.get()==2:
+        Title2= ' Max Offset'
+        vmin=np.max(oof)/2.
+        hb = ax.hexbin(xxrot, yyrot, vmin=vmin , C=oof, reduce_C_function=np.max,  gridsize=(nx,ny), marginals=False, cmap='jet')
+     if plotopt.get()==3:
+        hb = ax.hexbin(xxrot, yyrot,  C=oof, reduce_C_function=np.mean,  gridsize=(nx,ny), marginals=False, cmap='jet')
+        Title2= ' Mean Offset'
+
+ if vv.get()==0:
+   cb = fig.colorbar(hb[3], ax=ax)
+   cb.set_label('Fold')
+ else:
+   cb = fig.colorbar(hb, ax=ax)
+   cb.set_label('Fold')
+
+
+ # count1 = hb.get_array()
+ ax.axis([xmin, xmax, ymin, ymax])
+ ax.set_title(Title1+Title2)
+
+
+ if var1.get() == 1:
+  ax.scatter(aaxr,aayr,s=6.5,color='red') #,alpha=.98)
+ if var1a.get() == 1:
+  ax.scatter(aaxs,aays,s=4.,color='blue') #,alpha=.6)
+ if var1b.get() == 1:
+  ax.scatter(xxrot,yyrot,s=2.,color='black')#,alpha=.98)
+
+
+# cb = fig.colorbar(hb, ax=ax)
+
+# cb.set_label('Fold')
+
+ upt=upt+progress
+ M.update(upt)
+
+ M.close()
+ plt.show()
+
+#------------------- OFFSET DISTRIBUTION PLOT ------------------------------------------------------
+def plot1(event):
+
+ mmax=RangeMax.get()
+ condition = r7<mmax
+ offset=np.extract(condition,r7)
+
+# xmax=x2 
+# ymax=y2 
+# xmin=x1 
+# ymin=y1 
+
+#######
+# M=PB(300,20)
+# M.settitle("Selectin CMPs")
+# M.open()
+# upt=0
+# progress=(1./len(r1))*100000
+# count=0
+
+ oof=[]
+# if ppick ==1:
+#  for i in range (0,len(r1)):
+#    if r1[i] >=x1:
+#      if r1[i] <x2:
+#        if r2[i] >=y1:
+#           if  r2[i]<y2:
+#             oof.append(offset[i])
+#
+#    if i == count:
+#     count+=100000
+#     upt=upt+progress
+#     M.update(upt)
+#
+# M.close()
+
+# if ppick==0:
+ oof=offset
+ mmoff=np.max(oof)
+ ymax3=2*(len(oof))/50
+
+ # the histogram of the data
+
+ fig, ax = plt.subplots (figsize=(10, 6))
+ n, bins, patches = ax.hist(oof, 50, facecolor='red', alpha=0.55)
+ ax.set_title('Offset_distribtution')
+ ax.axis([0, mmoff, 0, ymax3])
+ ax.grid(True)
+
+ plt.show()
+
+
+#------------------- Select CMPs  -----------------------------------------------------------------------------
+
+def pick():  
+
+ from matplotlib.widgets  import RectangleSelector
+# import tkMessageBox
+
+ global x1,x2,y1,y2
+ xp3,yp3=[],[]
+ with open('pol3.txt','r') as f2:
+     reader = csv.reader(f2, delimiter=' ')
+     next(reader)
+     for row in reader:
+      xp3.append(row[0])
+      yp3.append(row[1])
+
+ ig, ax = plt.subplots()
+ ax.scatter(xr,yr,s=4.5,color='red',alpha=.3)
+ ax.plot(xp3, yp3, color='blue', alpha=0.9,linewidth=2, solid_capstyle='round', zorder=1)
+
+ def line_select_callback(eclick, erelease):
+
+    global x1,y1,x2,y2
+    x1, y1 = eclick.xdata, eclick.ydata
+    x2, y2 = erelease.xdata, erelease.ydata
+
+    rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2))
+    ax.add_patch(rect)
+
+#    result=tkMessageBox.askyesno("Area selector", "Is the are ok?")
+#    if result:
+#    plt.close()
+
+ rs = RectangleSelector(ax, line_select_callback,drawtype='box', useblit=False, button=[1], 
+                       minspanx=5, minspany=5, spancoords='pixels', 
+                       interactive=True)
+ global ppick
+ ppick=1
+ plt.show()
+
+#-----------------------------------------Azimuth plot----------------------
+
+def azimuth(event):
+#77777
+ off=[]
+ ang=[]
+ offset=r7
+ xx=r1
+ yy=r2
+ t=r8
+
+ azim=(t*np.pi)/180.  
+ mmax=RangeMax.get()
+ mmin=RangeMin.get()
+
+ M=PB(300,20)
+ M.settitle("Selectin CMPs")
+ M.open()
+ upt=0
+ progress=(1./len(r1))*100000
+ count=0
+
+ if ppick==1:
+  for i in range (0,len(xx)):
+    if xx[i] >=x1:
+      if xx[i] <x2:
+        if yy[i] >=y1:  
+           if  yy[i]<y2: 
+             off.append(offset[i])
+             ang.append(azim[i])
+
+    if i == count:
+     count+=100000
+     upt=upt+progress
+     M.update(upt)
+
+ M.close()
+
+ if ppick==0:
+    off=offset
+    ang=azim
+  
+ nr= 30
+ ntheta = 48
+ s = np.linspace(mmin, mmax,nr+1 )
+ a = np.linspace(0, 2*np.pi, ntheta+1)
+
+ H, _, _ = np.histogram2d(off, ang ,[s, a])
+ theta, r = np.meshgrid(a,s)
+
+ asd=np.pi*22/180
+# asd=0.
+ cmap = plt.get_cmap('rainbow')
+ ax = plt.subplot(111, polar=True)
+ ax.set_theta_zero_location("N")
+ #ax.set_theta_offset(asd)
+
+ ax.set_theta_direction(-1)
+ ax.tick_params(axis='both', which='major', labelsize=6)
+ ax.tick_params(axis='both', which='minor', labelsize=6)
+# ax.tick_params(axis='Y', which='major', labelsize=1)
+
+
+ im=ax.pcolormesh(theta, r,H ,cmap=cmap)
+ cbar = plt.colorbar(im,orientation="horizontal",aspect=40,ax=ax)
+
+ plt.title('Offset Distribution')
+ plt.grid(True)
+ plt.grid(color='black', linestyle='--', linewidth=.4)
+ cbar.set_label('# of hits', rotation=0)
+ plt.show()
+
+#------------Classes----------------------------------------------------------
+
+class Cmp(object):
+
+  import numpy as np
+  import math
+  import struct
+  import binascii
+
+
+  def __init__(self,xs,ys,xr,yr,wd,td,vpvs,maxoff,opt):
+
+      import numpy as np
+      import math
+      import struct
+      import binascii
+      from sys import getsizeof
+#      from bar import PB
+
+#      from multiprocessing.dummy import Pool as ThreadPool 
+#      pool = ThreadPool(4) 
+#      results = pool.map(my_function, my_array)
+#---- ...
+#      results = []
+#   for item in my_array:
+#    results.append(my_function(item))
+
+      self.xr = xr
+      self.xs = xs
+      self.yr = yr
+      self.ys = ys
+      self.wd = wd
+      self.td = td
+      self.vpvs = vpvs
+      self.maxoff = maxoff
+      self.opt =opt
+
+      self.nnodes=len(self.xr)
+      self.nshots=len(self.xs)
+
+      cmp1x, cmp1y = [],[]
+      cmp2x, cmp2y = [],[]
+      cmp3x, cmp3y = [],[]
+      Offset, Offsetx, Offsety, Azim  = [], [], [],[]      
+
+      ntotal=self.nnodes*self.nshots
+
+      k=0
+      l=0
+
+#--------------------------------------
+      a=PB(400,20)
+      a.settitle("CMP Computation")
+      a.open()
+      upt=0
+      progress=1./ntotal
+
+
+      for i in range(0,self.nnodes):
+       a.update(upt)
+
+       for j in range(0,self.nshots):
+
+         xx = (self.xs[j]-self.xr[i])
+         yy = (self.ys[j]-self.yr[i])
+         xoff = (math.sqrt(xx**2+yy**2))
+  #66666
+         xazim = ((math.atan2(yy,xx))*(180. / np.pi)) # +180
+
+         if yy>0 and xx>0:
+           xazim= 90-xazim
+         if yy<0 and xx>0:
+           xazim=90+abs(xazim)
+         if yy<0 and xx<0:
+           xazim=90+abs(xazim)
+         if yy>0 and xx<0:
+           xazim=450-xazim 
+
+  
+#         print  xx,yy,xazim
+##         if xazim <0:
+##           xazim=360+xazim #+180
+         taniu_x= (xx)/(2*self.td+self.wd)
+         taniu_y= (yy)/(2*self.td+self.wd)
+         tanid_x= (xx)/(2*self.td+3*self.wd)
+         tanid_y= (yy)/(2*self.td+3*self.wd)
+         dxu= taniu_x*self.td
+         dyu= taniu_y*self.td
+         dxd= tanid_x*(self.td+2*self.wd)
+         dyd= tanid_y*(self.td+2*self.wd)
+         dxs1= xx/(1+self.vpvs)
+         dys1= yy/(1+self.vpvs)
+
+         if xoff <= self.maxoff:
+          xu=self.xr[i]+dxu
+          yu=self.yr[i]+dyu
+          xd=(self.xr[i])+dxd
+          yd=(self.yr[i])+dyd
+          xps=(self.xr[i])+dxs1
+          yps=(self.yr[i])+dys1
+
+
+          if self.opt == 0:
+            (cmp1x.append(xu))
+            (cmp1y.append(yu))
+            (Offset.append(xoff))
+            (Azim.append(xazim))
+
+          if self.opt == 1:
+            (cmp2x.append(xd))
+            (cmp2y.append(yd))
+            (Offset.append(xoff))
+            (Azim.append(xazim))
+
+          if self.opt == 2:
+            (cmp3x.append(xps))
+            (cmp3y.append(yps))
+            (Offset.append(xoff))
+            (Azim.append(xazim))
+
+         k=k+1
+
+         upt=upt+progress
+
+      a.close()
+#---------------------------------------------------------------
+      print ('Writing files')
+      print ('Size of each vector Mb', getsizeof(cmp1x)/(1024*1024))
+
+      if  self.opt==0:
+       np.savez('cmp__',cmp1x=cmp1x,cmp1y=cmp1y,offsetx=Offsetx,offsety=Offsety,offset=Offset,azim=Azim)
+       newFile = open("cmpgmtup", "wb")
+       filearray=(np.column_stack((cmp1x,cmp1y)))
+       newFile.write(filearray)
+       print ('Arquivo cmtgmtup written')
+
+      if self.opt==1:
+       np.savez('cmp1__',cmp1x=cmp2x,cmp1y=cmp2y,offsetx=Offsetx,offsety=Offsety,offset=Offset,azim=Azim)
+       newFile = open("cmpgmtdown", "wb")
+       filearray=(np.column_stack((cmp1x,cmp1y)))
+       newFile.write(filearray)
+       print ('Arquivo cmtgmtdown written')
+
+
+      if self.opt==2:
+       np.savez('cmp2__',cmp1x=cmp3x,cmp1y=cmp3y,offsetx=Offsetx,offsety=Offsety,offset=Offset,azim=Azim)
+       newFile = open("cmpgmtps", "wb")
+       filearray=(np.column_stack((cmp1x,cmp1y)))
+       newFile.write(filearray)
+       print ('Arquivo cmtgmtps written')
+
+      print ('CMP files written')
+
+  def getnnodes(self):
+      return self.nnodes
+
+  def getnshots(self):
+      return self.nshots
+#-----------------------------------------------------
+
+def gplotf(event):
+ os.system('./GMT/gplotf&')
+
+
+#..................................................
+#import Tkinter
+
+class PB:
+    
+    def settitle(self, title):
+        self.__root.title(title)
+        
+        
+    # Create Progress Bar
+    def __init__(self, width, height):
+        #self.__root = Tkinter.Toplevel()
+        self.__root = tkinter.Tk() #updated by Petr
+        self.__root.resizable(False, False)
+        self.__root.title('Wait please...')
+        self.__canvas = tkinter.Canvas(self.__root, width=width, height=height)
+        self.__canvas.grid()
+        self.__width = width
+        self.__height = height
+
+    # Open Progress Bar
+    def open(self):
+        self.__root.deiconify()
+        self.__root.focus_set()
+        #self.__root.update()
+
+    # Close Progress Bar
+    def close(self):
+        self.__root.withdraw()
+
+    # Update Progress Bar
+    def update(self, ratio):
+        self.__canvas.delete(tkinter.ALL)
+        self.__canvas.create_rectangle(0, 0, self.__width * ratio, \
+                                       self.__height, fill='blue')
+        self.__root.update()
+        self.__root.focus_set()
+
+
+#----------------------------------------------------------------------
+
+Label(root, text="-----------------------------------------").grid(row=2, column=0, sticky=E)
+
+Button(root,text="COMPUTE/READ CMP         ",font=("Sans Bold", 9), command=compcmp).grid(row=5, column=0) #, sticky=W)
+
+#Label(root, text="-----------------------------------------").grid(row=8, column=0, sticky=E)
+#Button(root,text="SELECT AREA                 ",font=("Sans Bold", 9), command=pick).grid(row=11, column=0)
+#Label(root, text="-----------------------------------------").grid(row=16, column=0, sticky=E)
+
+
+##PORRA
+b2=Button(root,text="PLOT FOLD                     ",font=("Sans Bold", 9)) #, state='disable')
+b2.grid(row=11, column=0) #, sticky=E)
+
+b1=Button(root,text="PLOT GMT HIT COUNT FOLD",font=("Sans Bold", 9)) # , state='disable')
+b1.grid(row=23, column=3,  sticky=E)
+
+b3=Button(root,text="OFFSET DISTRIBUTION      ",font=("Sans Bold", 9)) #, state='disable')
+b3.grid(row=21, column=3 ,sticky=E)
+
+b4=Button(root,text="AZIMUTH DISTRIBUTION     ",font=("Sans Bold", 9)) # , state='disable')
+b4.grid(row=25, column=3 ,sticky=E)
+
+
+Button(root,text="EXIT",font=("Sans Bold", 9), command=exit).grid(row=36, column=6,sticky=W )
+root.mainloop()
+ 
