@@ -52,34 +52,32 @@ photo_label = Label(root, image=photo)
 photo_label.image = photo 
 photo_label.grid()
 
-Label(root, text='Foldmap 2.06  ',font=("Sans Bold", 10)).grid(row=0,column=5,sticky=NE)
+Label(root, text='Foldmap 2.1',font=("Sans Bold", 9)).grid(row=0,column=1,sticky=NE)
 
 Frame(root, bg="black",width=3, height=3)
 
-Label(root, text="-------------------------------------------").grid(row=2, column=3, sticky=E)
-Label(root, text="  CMP computation parameters  ",font=("Sans Bold", 10)).grid(row=2, column=4, sticky=E)
-Label(root, text="---------------------------------------").grid(row=2, column=5, sticky=E)
-Label(root, text="       ").grid(row=3, column=3, sticky=E)
-Label(root, text="Water Depth (m):      ",font=("Sans Bold", 9)).grid(row=3, column=3,sticky='w')
+##### CMP COMPUTATION
+Label(root, text="CMP computation parameters  ",font=("Sans Bold", 10)).grid(row=1, column=1, sticky=W)
+#Label(root, text="       ").grid(row=3, column=3, sticky=E)
+Label(root, text="Water Depth (m):      ",font=("Sans Bold", 9)).grid(row=2, column=1,sticky='w')
 WaterDepth = DoubleVar()
-Entry(root, width=8, textvariable=WaterDepth,font=("Sans Bold", 9)).grid(row=3, column=3,sticky='e')
+Entry(root, width=8, textvariable=WaterDepth,font=("Sans Bold", 9)).grid(row=2, column=2,sticky='w')
 WaterDepth.set("0")
-Label(root, text="Target Depth (m): ",font=("Sans Bold", 9)).grid(row=3, column=5,sticky='w')
+Label(root, text="Target Depth (m): ",font=("Sans Bold", 9)).grid(row=3, column=1,sticky='w')
 TargetDepth = DoubleVar()
-Entry(root, width=8, textvariable=TargetDepth,font=("Sans Bold", 9)).grid(row=3, column=5,sticky='e')
+Entry(root, width=8, textvariable=TargetDepth,font=("Sans Bold", 9)).grid(row=3, column=2,sticky='w')
 TargetDepth.set("2000")
-Label(root, text="Vp/Vs: ",font=("Sans Bold", 9)).grid(row=4, column=3,sticky='w')
+Label(root, text="Vp/Vs: ",font=("Sans Bold", 9)).grid(row=4, column=1,sticky='w')
 VpVs = DoubleVar()
-Entry(root, width=8, textvariable=VpVs,font=("Sans Bold", 9)).grid(row=4, column=3,sticky='e')
+Entry(root, width=8, textvariable=VpVs,font=("Sans Bold", 9)).grid(row=4, column=2,sticky='w')
 VpVs.set("3")
-Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=4, column=5,sticky='w')
+Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=5, column=1,sticky='w')
 CompOffMax = DoubleVar()
-Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=4, column=5,sticky='e')
+Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=5, column=2,sticky='w')
 CompOffMax.set("8000")
-
+#######
 #---------------Raio buttoms wavefield------------------------------------------------
-Label(root, text="       ").grid(row=7, column=3, sticky=E)
-
+#Label(root, text="       ").grid(row=7, column=3, sticky=E)
 v = IntVar()
 v.set(0)  
 languages = [
@@ -90,33 +88,28 @@ languages = [
 ]
 def ShowChoice():
     print(v.get())
-Label(root, text="""    """,font=("Sans Bold", 10),fg = 'blue',
-         padx = 20).grid(row =3, column=4) #,sticky=W)
+Label(root, text="",font=("Sans Bold", 10),fg = 'blue',
+         padx = 20).grid(row =3, column=4, sticky=W)
 for val, language in enumerate(languages):
             Radiobutton(root, 
                   text=language,
-                  padx = 40, 
+                  padx = 5, 
                   variable=v, 
                   command=ShowChoice,
-                  value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =4+val, column=4, sticky=W)
+                  value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =4+val, column=0, sticky=W)
 
-#------------------------------------------------
 
 var10 = IntVar()
 var10.set(1)
-Checkbutton(root, text=' Read previous CMP file   ',font=("Sans Bold", 9), variable=var10 ).grid(row =7, column=0, sticky=W)
+Checkbutton(root, text=' Read previous CMP file   ',font=("Sans Bold", 9), variable=var10 ).grid(row =7, column=0)
 
-
+#### FOLD COMPUTATION 
 Label(root, text="       ").grid(row=7, column=3, sticky=E)
-Label(root, text="---------------------------------------------").grid(row=8, column=3, sticky=E)
-Label(root, text="  FOLD computation parameters  ",font=("Sans Bold", 10)).grid(row=8, column=4, sticky=E)
-Label(root, text="-----------------------------------------").grid(row=8, column=5, sticky=E)
-Label(root, text="       ").grid(row=9, column=3, sticky=E)
+Label(root, text="FOLD computation parameters",font=("Sans Bold", 10)).grid(row=11, column=1, sticky=W)
 
-#poRRA
-Label(root, text="Bin size X : ",font=("Sans Bold", 9)).grid(row=10, column=3, sticky=W)
+Label(root, text="Bin size X : ",font=("Sans Bold", 9)).grid(row=12, column=1, sticky=W)
 Bx = DoubleVar()
-Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=10, column=3, sticky=E)
+Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=12, column=2, sticky=W)
 Bx.set("100")
 
 # Aprendi como alterar o outro campo ao preencher um !!!!!!!!!!!!!
@@ -125,38 +118,39 @@ Bx.set("100")
 #Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=10, column=4, sticky=E)
 #angulo.set("0.")
 
-Label(root, text="  Angle (degrees): ",font=("Sans Bold", 9)).grid(row=10, column=4, sticky=W)
-angulo = DoubleVar()
-Entry(root, width=8, textvariable=angulo,font=("Sans Bold", 9)).grid(row=10, column=4, sticky=E)
-angulo.set("0.")
-
-
-Label(root, text="Bin size Y: ",font=("Sans Bold", 9)).grid(row=10, column=5, sticky=W)
+Label(root, text="Bin size Y: ",font=("Sans Bold", 9)).grid(row=13, column=1, sticky=W)
 By = DoubleVar()
-Entry(root, width=8, textvariable=By,font=("Sans Bold", 9)).grid(row=10, column=5, sticky=E)
+Entry(root, width=8, textvariable=By,font=("Sans Bold", 9)).grid(row=13, column=2, sticky=W)
 By.set("100")
-Label(root, text="Node space X (m): ",font=("Sans Bold", 9)).grid(row=11, column=3, sticky=W)
+Label(root, text="Angle (degrees): ",font=("Sans Bold", 9)).grid(row=14, column=1, sticky=W)
+angulo = DoubleVar()
+Entry(root, width=8, textvariable=angulo,font=("Sans Bold", 9)).grid(row=14, column=2, sticky=W)
+angulo.set("0.")
+Label(root, text="Node space X (m): ",font=("Sans Bold", 9)).grid(row=15, column=1, sticky=W)
 NodeX = DoubleVar()
-Entry(root, width=8, textvariable=NodeX,font=("Sans Bold", 9)).grid(row=11, column=3, sticky=E)
+Entry(root, width=8, textvariable=NodeX,font=("Sans Bold", 9)).grid(row=15, column=2, sticky=W)
 NodeX.set("400")
-Label(root, text="Node space Y (m): ",font=("Sans Bold", 9)).grid(row=11, column=5, sticky=W)
+Label(root, text="Node space Y (m): ",font=("Sans Bold", 9)).grid(row=16, column=1, sticky=W)
 NodeY = DoubleVar()
-Entry(root, width=8, textvariable=NodeY,font=("Sans Bold", 9)).grid(row=11, column=5, sticky=E)
+Entry(root, width=8, textvariable=NodeY,font=("Sans Bold", 9)).grid(row=16, column=2, sticky=W)
 NodeY.set("400")
-Label(root, text="Range Maximum X (m): ",font=("Sans Bold", 9)).grid(row=12, column=3, sticky=W)
+Label(root, text="Range Maximum X (m): ",font=("Sans Bold", 9)).grid(row=17, column=1, sticky=W)
 RangeMax = DoubleVar()
-Entry(root, width=8, textvariable=RangeMax,font=("Sans Bold", 9)).grid(row=12, column=3, sticky=E)
+Entry(root, width=8, textvariable=RangeMax,font=("Sans Bold", 9)).grid(row=17, column=2, sticky=W)
 RangeMax.set("8000")
-Label(root, text="Range Minimum Y (m): ",font=("Sans Bold", 9)).grid(row=12, column=5, sticky=W)
+Label(root, text="Range Minimum Y (m): ",font=("Sans Bold", 9)).grid(row=18, column=1, sticky=W)
 RangeMin = DoubleVar()
-Entry(root, width=8, textvariable=RangeMin,font=("Sans Bold", 9)).grid(row=12, column=5, sticky=E)
+Entry(root, width=8, textvariable=RangeMin,font=("Sans Bold", 9)).grid(row=18, column=2, sticky=W)
 RangeMin.set("0")
-Label(root, text="---------------------------------------------").grid(row=16, column=3, sticky=E)
-Label(root, text="  FOLD plot options               ",font=("Sans Bold", 10)).grid(row=16, column=4, sticky=E)
-Label(root, text="---------------------------------------------").grid(row=16, column=5, sticky=E)
+
+######
+
+#Label(root, text="________").grid(row=18, column=2, sticky=E)
+#Label(root, text="  FOLD plot options               ",font=("Sans Bold", 10)).grid(row=18, column=1, sticky=E)
+#Label(root, text="---------------------------------------------").grid(row=18, column=5, sticky=E)
 
 #--------------------------Fold rario buttoms-----------------------------------
-Label(root, text="       ").grid(row=7, column=3, sticky=E)
+#Label(root, text="       ").grid(row=7, column=3, sticky=E)
 
 vv = IntVar()
 vv.set(0)
@@ -181,15 +175,20 @@ lang = [
 def ShowChoice():
     print(vv.get())
 
-Label(root, text="""Binning options""",font=("Sans Bold", 12),fg = 'blue',
-         padx = 20).grid(row =18, column=0,sticky=W)
+Label(root, text="_______________________").grid(row=24, column=0,sticky=E)
+Label(root, text="_________________________________").grid(row=24, column=1,sticky=W)
+#Label(root, text="___________________________").grid(row=24, column=2,sticky=E)
+
+
+Label(root, text="""Binning options""",font=("Sans Bold", 9),fg = 'blue',
+         padx = 10).grid(row =25, column=0,sticky=W)
 for val, language in enumerate(languages):
             Radiobutton(root, 
                   text=language,
-                  padx = 40, 
+                  padx = 5, 
                   variable=vv, 
                   command=ShowChoice,
-                  value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =19+val, column=0,sticky=W) #, state=kstate)
+                  value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =26+val, column=0,sticky=W) #, state=kstate)
 
 def ShowChoiceFold():
     print(plotopt.get())
@@ -197,27 +196,27 @@ def ShowChoiceFold():
        kstate='enable'
 
 
-Label(root, text="""Hexagonl bin fold  options""",font=("Sans Bold", 12),fg = 'blue',
-         padx = 20).grid(row =22, column=0,sticky=W)
+Label(root, text="""Hexagonal bin fold  options""",font=("Sans Bold", 10),fg = 'blue',
+         padx = 0).grid(row =25, column=1,sticky=W)
 for val, lang in enumerate(lang):
             Radiobutton(root, 
                   text=lang,
-                  padx = 40, 
+                  padx = 10, 
                   variable=plotopt, 
                   command=ShowChoiceFold,
-                  value=val,font=("Sans Bold", 9),fg = 'blue', state=kstate).grid(row =23+val, column=0,sticky=W)
+                  value=val,font=("Sans Bold", 8),fg = 'blue', state=kstate).grid(row =26+val, column=1,sticky=W)
 
 #--------------------------------------------------------------------------
 
 var1 = IntVar()
-Checkbutton(root, text='   Plot Nodes              ',font=("Sans Bold", 9), onvalue=1., variable=var1 ).grid(row =22, column=5, sticky=W)
+Checkbutton(root, text='   Plot Nodes    ',font=("Sans Bold", 9), onvalue=1., variable=var1 ).grid(row =14, column=0,sticky=W)
 var1a = IntVar()
-Checkbutton(root, text='   Plot Shots              ',font=("Sans Bold", 9), variable=var1a ).grid(row =23, column=5, sticky=W)
+Checkbutton(root, text='   Plot Shots    ',font=("Sans Bold", 9), variable=var1a ).grid(row =15, column=0,sticky=W)
 var1b = IntVar()
-Checkbutton(root, text='   Plot CMPs              ',font=("Sans Bold", 9), variable=var1b ).grid(row =24, column=5, sticky=W)
+Checkbutton(root, text='   Plot CMPs     ',font=("Sans Bold", 9), variable=var1b ).grid(row =16, column=0,sticky=W)
 var1c = IntVar()
 var1c.set(1)
-Checkbutton(root, text='   Plot FOLD              ',font=("Sans Bold", 9), variable=var1c ).grid(row =25, column=5, sticky=W)
+Checkbutton(root, text='   Plot FOLD   ',font=("Sans Bold", 9), variable=var1c ).grid(row =17, column=0,sticky=W)
 
 
 
@@ -915,29 +914,26 @@ class PB:
 
 #----------------------------------------------------------------------
 
-Label(root, text="-----------------------------------------").grid(row=2, column=0, sticky=E)
+#Label(root, text="-----------------------------------------").grid(row=2, column=0, sticky=E)
 
-Button(root,text="COMPUTE/READ CMP         ",font=("Sans Bold", 9), command=compcmp).grid(row=5, column=0) #, sticky=W)
+Button(root,text="COMPUTE/READ CMP",font=("Sans Bold", 6), command=compcmp).grid(row=2, column=0, sticky=W)
 
 #Label(root, text="-----------------------------------------").grid(row=8, column=0, sticky=E)
 #Button(root,text="SELECT AREA                 ",font=("Sans Bold", 9), command=pick).grid(row=11, column=0)
 #Label(root, text="-----------------------------------------").grid(row=16, column=0, sticky=E)
 
+b2=Button(root,text="FOLD",font=("Sans Bold", 6)) #, state='disable')
+b2.grid(row=12, column=0 , sticky=W)
 
-##PORRA
-b2=Button(root,text="PLOT FOLD                     ",font=("Sans Bold", 9)) #, state='disable')
-b2.grid(row=11, column=0) #, sticky=E)
+b1=Button(root,text="GMT HIT COUNT FOLD",font=("Sans Bold", 6)) # , state='disable')
+b1.grid(row=26, column=2,  sticky=W)
 
-b1=Button(root,text="PLOT GMT HIT COUNT FOLD",font=("Sans Bold", 9)) # , state='disable')
-b1.grid(row=23, column=3,  sticky=E)
+b3=Button(root,text="OFFSET DISTRIBUTION",font=("Sans Bold", 6)) #, state='disable')
+b3.grid(row=28, column=2 ,sticky=W)
 
-b3=Button(root,text="OFFSET DISTRIBUTION      ",font=("Sans Bold", 9)) #, state='disable')
-b3.grid(row=21, column=3 ,sticky=E)
+b4=Button(root,text="AZIMUTH DISTRIBUTION",font=("Sans Bold", 6)) # , state='disable')
+b4.grid(row=30, column=2 ,sticky=W)
 
-b4=Button(root,text="AZIMUTH DISTRIBUTION     ",font=("Sans Bold", 9)) # , state='disable')
-b4.grid(row=25, column=3 ,sticky=E)
-
-
-Button(root,text="EXIT",font=("Sans Bold", 9), command=exit).grid(row=36, column=6,sticky=W )
+Button(root,text="EXIT",font=("Sans Bold", 8), command=exit).grid(row=34, column=0,sticky=W )
 root.mainloop()
  
