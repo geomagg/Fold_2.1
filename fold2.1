@@ -157,21 +157,11 @@ RangeMin = DoubleVar()
 Entry(root, width=8, textvariable=RangeMin,font=("Sans Bold", 9)).grid(row=18, column=2, sticky=W)
 RangeMin.set("0")
 
-######
-
-#Label(root, text="________").grid(row=18, column=2, sticky=E)
-#Label(root, text="  FOLD plot options               ",font=("Sans Bold", 10)).grid(row=18, column=1, sticky=E)
-#Label(root, text="---------------------------------------------").grid(row=18, column=5, sticky=E)
-
-#--------------------------Fold rario buttoms-----------------------------------
-#Label(root, text="       ").grid(row=7, column=3, sticky=E)
-
 vv = IntVar()
 vv.set(0)
 languages = [
     ("Rectangular binning"),
     ("Hexagonal  binning")]
-
 
 plotopt = IntVar()
 
@@ -198,7 +188,6 @@ def ShowChoice():
 Label(root, text="_______________________").grid(row=24, column=0,sticky=E)
 Label(root, text="_________________________________").grid(row=24, column=1,sticky=W)
 #Label(root, text="___________________________").grid(row=24, column=2,sticky=E)
-
 
 Label(root, text="""Binning options""",font=("Sans Bold", 9),fg = 'blue',
          padx = 10).grid(row =25, column=0,sticky=W)
@@ -227,7 +216,6 @@ for val, lang in enumerate(lang):
                   value=val,font=("Sans Bold", 8),fg = 'blue', state=kstate).grid(row =26+val, column=1,sticky=W)
 
 #--------------------------------------------------------------------------
-
 var1 = IntVar()
 Checkbutton(root, text='   Plot Nodes    ',font=("Sans Bold", 9), onvalue=1., variable=var1 ).grid(row =14, column=0,sticky=W)
 var1a = IntVar()
@@ -238,11 +226,7 @@ var1c = IntVar()
 var1c.set(1)
 Checkbutton(root, text='   Plot FOLD   ',font=("Sans Bold", 9), variable=var1c ).grid(row =17, column=0,sticky=W)
 
-
-
-
 #--------------------------------------------------------------------------
-
 def show():
     print( "You entered:")
     print( "Bin size X (ft/m): "+ str(Bx.get()))
@@ -255,9 +239,6 @@ def show():
     print( "Minimum Azimuth (degrees): "+ str(MinAz.get()))
     print( "Node space X (m): "+ str(NodeX.get()))
     print( "Node space Y (m): "+ str(NodeY.get()))
-
-#Button(root,text="SHOW",font=("Sans Bold", 9), command=show).grid(row=36, column=6,sticky=E )
-#Button(root,text="STOP",font=("Sans Bold", 9), command=exit).grid(row=36, column=5 ,sticky=W )
 
 #------------------------End of initial GUI -----------------------------------------------
 xr,xs =[],[]
@@ -306,9 +287,6 @@ def compcmp():
      ASTATUS='TRUE'
    else:
      tkinter.messagebox.showwarning("CMP file does not exist","Please compute CMP file")
-
-
-
 
 
  if v.get()==1:
@@ -385,7 +363,6 @@ def compcmp():
 #     b2.unbind('<Button-1>')
      ASTATUS='FALSE'
 
-
 #-------------- FOLD PLOT -------------------------------------------------------------------------
 def fold(event):
 
@@ -443,7 +420,6 @@ def fold(event):
  aays=ays
 
  i=0
-#PORRA 
  while i < nxr:
      aaxr[i]= -ayr[i]*math.sin(ang)+axr[i]*math.cos(ang)
      aayr[i]= ayr[i]*math.cos(ang)+axr[i]*math.sin(ang)
@@ -455,30 +431,6 @@ def fold(event):
      aays[i]= ays[i]*math.cos(ang)+axs[i]*math.sin(ang)
      i += 1
 
-
-# if ppick==1:
-#  M=PB(300,20)
-#  M.settitle("Selectin CMPs")
-#  M.open()
-#  upt=0
-#  progress=(1./len(cmp1x))*100
-#  count=0
-
-#  for i in range (0,len(cmp1x)):
-#    if cmp1x[i] >=x1:
-#      if cmp1x[i] <x2:
-#        if cmp1y[i] >=y1:
-#           if  cmp1y[i]<y2:
-#             xx.append(cmp1x[i])
-#             yy.append(cmp1y[i])
-#             oof.append(offset[i])
-
-#    if i == count:
-#     count+=100000
-#     upt=upt+progress
-#     M.update(upt)
- 
-#  M.close()
  if ppick==0:
              xx=cmp1x
              yy=cmp1y
@@ -520,16 +472,10 @@ def fold(event):
  ny = int((ymax-ymin)/By.get())+1
  nxtest =int(ny*math.sqrt(3))
 
-
  xmin=np.min(aaxs)
  xmax=np.max(aaxs)
  ymin=np.min(aays)
  ymax=np.max(aays)
-
-
-# nx = int((xmax-xmin)/Bx.get())+1
-# ny = int((ymax-ymin)/By.get())+1
-# nxtest =int(ny*math.sqrt(3))
 
  nnx =nx*ny
  if var1c.get() == 1:
@@ -573,11 +519,6 @@ def fold(event):
  if var1b.get() == 1:
   ax.scatter(xxrot,yyrot,s=2.,color='black')#,alpha=.98)
 
-
-# cb = fig.colorbar(hb, ax=ax)
-
-# cb.set_label('Fold')
-
  upt=upt+progress
  M.update(upt)
 
@@ -591,36 +532,7 @@ def plot1(event):
  condition = r7<mmax
  offset=np.extract(condition,r7)
 
-# xmax=x2 
-# ymax=y2 
-# xmin=x1 
-# ymin=y1 
-
-#######
-# M=PB(300,20)
-# M.settitle("Selectin CMPs")
-# M.open()
-# upt=0
-# progress=(1./len(r1))*100000
-# count=0
-
  oof=[]
-# if ppick ==1:
-#  for i in range (0,len(r1)):
-#    if r1[i] >=x1:
-#      if r1[i] <x2:
-#        if r2[i] >=y1:
-#           if  r2[i]<y2:
-#             oof.append(offset[i])
-#
-#    if i == count:
-#     count+=100000
-#     upt=upt+progress
-#     M.update(upt)
-#
-# M.close()
-
-# if ppick==0:
  oof=offset
  mmoff=np.max(oof)
  ymax3=2*(len(oof))/50
@@ -635,13 +547,11 @@ def plot1(event):
 
  plt.show()
 
-
 #------------------- Select CMPs  -----------------------------------------------------------------------------
 
 def pick():  
 
  from matplotlib.widgets  import RectangleSelector
-# import tkMessageBox
 
  global x1,x2,y1,y2
  xp3,yp3=[],[]
@@ -664,10 +574,6 @@ def pick():
 
     rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2))
     ax.add_patch(rect)
-
-#    result=tkMessageBox.askyesno("Area selector", "Is the are ok?")
-#    if result:
-#    plt.close()
 
  rs = RectangleSelector(ax, line_select_callback,drawtype='box', useblit=False, button=[1], 
                        minspanx=5, minspany=5, spancoords='pixels', 
@@ -738,7 +644,6 @@ def azimuth(event):
  ax.tick_params(axis='both', which='minor', labelsize=6)
 # ax.tick_params(axis='Y', which='major', labelsize=1)
 
-
  im=ax.pcolormesh(theta, r,H ,cmap=cmap)
  cbar = plt.colorbar(im,orientation="horizontal",aspect=40,ax=ax)
 
@@ -765,15 +670,6 @@ class Cmp(object):
       import struct
       import binascii
       from sys import getsizeof
-#      from bar import PB
-
-#      from multiprocessing.dummy import Pool as ThreadPool 
-#      pool = ThreadPool(4) 
-#      results = pool.map(my_function, my_array)
-#---- ...
-#      results = []
-#   for item in my_array:
-#    results.append(my_function(item))
 
       self.xr = xr
       self.xs = xs
@@ -814,7 +710,6 @@ class Cmp(object):
          xx = (self.xs[j]-self.xr[i])
          yy = (self.ys[j]-self.yr[i])
          xoff = (math.sqrt(xx**2+yy**2))
-  #66666
          xazim = ((math.atan2(yy,xx))*(180. / np.pi)) # +180
 
          if yy>0 and xx>0:
@@ -826,10 +721,6 @@ class Cmp(object):
          if yy>0 and xx<0:
            xazim=450-xazim 
 
-  
-#         print  xx,yy,xazim
-##         if xazim <0:
-##           xazim=360+xazim #+180
          taniu_x= (xx)/(2*self.td+self.wd)
          taniu_y= (yy)/(2*self.td+self.wd)
          tanid_x= (xx)/(2*self.td+3*self.wd)
@@ -915,7 +806,6 @@ def gplotdown(event):
 def gplotps(event):
  os.system('./GMT/gplotps&')
 #..................................................
-#import Tkinter
 
 class PB:
     
@@ -959,10 +849,6 @@ class PB:
 
 Button(root,text="COMPUTE/READ CMP",font=("Sans Bold", 6), command=compcmp).grid(row=2, column=0, sticky=W)
 
-#Label(root, text="-----------------------------------------").grid(row=8, column=0, sticky=E)
-#Button(root,text="SELECT AREA                 ",font=("Sans Bold", 9), command=pick).grid(row=11, column=0)
-#Label(root, text="-----------------------------------------").grid(row=16, column=0, sticky=E)
-
 b2=Button(root,text="FOLD",font=("Sans Bold", 6)) #, state='disable')
 b2.grid(row=12, column=0 , sticky=W)
 
@@ -976,5 +862,6 @@ b4=Button(root,text="AZIMUTH DISTRIBUTION",font=("Sans Bold", 6)) # , state='dis
 b4.grid(row=30, column=2 ,sticky=W)
 
 Button(root,text="EXIT",font=("Sans Bold", 8), command=exit).grid(row=34, column=0,sticky=W )
+
 root.mainloop()
  
