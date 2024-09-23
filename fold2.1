@@ -18,6 +18,8 @@ import matplotlib.mlab as mlab
 import tkinter.messagebox
 from tkinter import messagebox
 import os
+from CTkMessagebox import CTkMessagebox
+from customtkinter import CTkButton, CTk
 
 #----------------------------------------------------
 root = Tk()
@@ -33,6 +35,9 @@ def OpenFile():
 def About():
     tkinter.messagebox.showinfo("Version 1.04", "OK")
     print ("This is a simple exa")
+
+
+
 menu = Menu(root)
 root.config(menu=menu)
 filemenu = Menu(menu)
@@ -87,7 +92,17 @@ languages = [
 
 ]
 def ShowChoice():
-    print(v.get())
+#    print(v.get())
+    if v.get() ==0:
+       CTkMessagebox(title="Fold type", 
+                  message="Up-coming or direct field, Recompute CMPs")
+    if v.get() ==1:
+       CTkMessagebox(title="Fold type", 
+                  message="Down-going or mirror field, Recompute CMPs") 
+    if v.get() ==2:
+       CTkMessagebox(title="Fold type", 
+                  message="PS or CCP, Recompute CMPs")  
+         
 Label(root, text="",font=("Sans Bold", 10),fg = 'blue',
          padx = 20).grid(row =3, column=4, sticky=W)
 for val, language in enumerate(languages):
@@ -174,6 +189,12 @@ lang = [
 
 def ShowChoice():
     print(vv.get())
+    if vv.get() ==0:
+       CTkMessagebox(title="Binning type", 
+                  message="Rectangular binning") 
+    if vv.get() ==1:
+       CTkMessagebox(title="Binning type", 
+                  message="Hexagonal binning")    
 
 Label(root, text="_______________________").grid(row=24, column=0,sticky=E)
 Label(root, text="_________________________________").grid(row=24, column=1,sticky=W)
@@ -287,6 +308,10 @@ def compcmp():
    else:
      tkinter.messagebox.showwarning("CMP file does not exist","Please compute CMP file")
 
+
+
+
+
  if v.get()==1:
    if os.path.exists('cmp1__.npz'):
      cmp = np.load('cmp1__.npz')
@@ -341,8 +366,14 @@ def compcmp():
      root.bind(azimuth)
 
 
-     tkinter.messagebox.showinfo("CMP data read", "Procede with the fold computation             ")
+     #tkinter.messagebox.showinfo("CMP data read", "Procede with the fold computation             ")
 
+     CTkMessagebox(message="Operation successful!", 
+                  icon="icons/quit.png", 
+                  option_1="OK")
+#     CTkMessagebox(title="Done", 
+#                  message="Procede with the fold computation. Check the desired bin size")
+#  
 #     b2.unbind('<Button-1>')
      ASTATUS='FALSE'
 
