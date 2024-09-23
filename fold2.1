@@ -23,19 +23,19 @@ from customtkinter import CTkButton, CTk
 
 #----------------------------------------------------
 root = Tk()
-root.title('Fold Attributes')
-
+root.title('Fold Map')
 
 def NewFile():
     tkMessageBox.showinfo("Computing the fold", "GO")
     print ("New File!")
 def OpenFile():
     name = askopenfilename()
-    print (name)
+  #  print (name)
 def About():
-    tkinter.messagebox.showinfo("Version 1.04", "OK")
-    print ("This is a simple exa")
-
+    CTkMessagebox(title="Version 2.1", icon="icons/fold.png",
+                  message="Fold Map - Compute OBN fold from SHots and Nodes positions")
+    
+    #tkinter.messagebox.showinfo("Version 1.04", "OK")
 
 
 menu = Menu(root)
@@ -57,9 +57,8 @@ photo_label = Label(root, image=photo)
 photo_label.image = photo 
 photo_label.grid()
 
-Label(root, text='Foldmap 2.1',font=("Sans Bold", 9)).grid(row=0,column=1,sticky=NE)
-
-Frame(root, bg="black",width=3, height=3)
+Label(root, text='Foldmap 2.1',font=("Sans Bold", 9)).grid(row=0,column=2,sticky=NW)
+Frame(root, bg="black",width=5, height=3)
 
 ##### CMP COMPUTATION
 Label(root, text="CMP computation parameters  ",font=("Sans Bold", 10)).grid(row=1, column=1, sticky=W)
@@ -94,10 +93,10 @@ languages = [
 def ShowChoice():
 #    print(v.get())
     if v.get() ==0:
-       CTkMessagebox(title="Fold type", 
+       CTkMessagebox(title="Fold type", icon="icons/up.png",
                   message="Up-coming or direct field, Recompute CMPs")
     if v.get() ==1:
-       CTkMessagebox(title="Fold type", 
+       CTkMessagebox(title="Fold type", icon="icons/mirror.png",
                   message="Down-going or mirror field, Recompute CMPs") 
     if v.get() ==2:
        CTkMessagebox(title="Fold type", 
@@ -191,10 +190,10 @@ def ShowChoice():
     print(vv.get())
     if vv.get() ==0:
        CTkMessagebox(title="Binning type", 
-                  message="Rectangular binning") 
+                  message="Rectangular binning",icon="icons/square.png") 
     if vv.get() ==1:
        CTkMessagebox(title="Binning type", 
-                  message="Hexagonal binning")    
+                  message="Hexagonal binning",icon="icons/hex.png")    
 
 Label(root, text="_______________________").grid(row=24, column=0,sticky=E)
 Label(root, text="_________________________________").grid(row=24, column=1,sticky=W)
@@ -353,27 +352,36 @@ def compcmp():
      y2=np.max(r2)
      ppick=0
      RunFlag=1
-          
-     b1.bind('<Button-1>' , gplotf)
+
+     if v.get() ==0 :
+       b1.bind('<Button-1>' , gplotf)
+     if v.get() ==1 :
+       b1.bind('<Button-1>' , gplotdown)
+     if v.get() ==2 :
+       b1.bind('<Button-1>' , gplotps)
+
      b2.bind('<Button-1>' , fold)
      b3.bind('<Button-1>' , plot1)
      b4.bind('<Button-1>' , azimuth)
 
 
      root.bind(fold)
-     root.bind(gplotf)
+     if v.get() ==0 :
+      root.bind(gplotf)
+     if v.get() ==1 :
+      root.bind(gplotdown) 
+     if v.get() ==2 :
+      root.bind(gplotps) 
+
      root.bind(plot1)
      root.bind(azimuth)
 
 
      #tkinter.messagebox.showinfo("CMP data read", "Procede with the fold computation             ")
-
      CTkMessagebox(message="Operation successful!", 
-                  icon="icons/quit.png", 
+                  icon="icons/check.png", 
                   option_1="OK")
-#     CTkMessagebox(title="Done", 
-#                  message="Procede with the fold computation. Check the desired bin size")
-#  
+
 #     b2.unbind('<Button-1>')
      ASTATUS='FALSE'
 
@@ -879,7 +887,7 @@ class Cmp(object):
       if self.opt==1:
        np.savez('cmp1__',cmp1x=cmp2x,cmp1y=cmp2y,offsetx=Offsetx,offsety=Offsety,offset=Offset,azim=Azim)
        newFile = open("cmpgmtdown", "wb")
-       filearray=(np.column_stack((cmp1x,cmp1y)))
+       filearray=(np.column_stack((cmp2x,cmp2y)))
        newFile.write(filearray)
        print ('Arquivo cmtgmtdown written')
 
@@ -887,7 +895,7 @@ class Cmp(object):
       if self.opt==2:
        np.savez('cmp2__',cmp1x=cmp3x,cmp1y=cmp3y,offsetx=Offsetx,offsety=Offsety,offset=Offset,azim=Azim)
        newFile = open("cmpgmtps", "wb")
-       filearray=(np.column_stack((cmp1x,cmp1y)))
+       filearray=(np.column_stack((cmp3x,cmp3y)))
        newFile.write(filearray)
        print ('Arquivo cmtgmtps written')
 
@@ -902,8 +910,10 @@ class Cmp(object):
 
 def gplotf(event):
  os.system('./GMT/gplotf&')
-
-
+def gplotdown(event):
+ os.system('./GMT/gplotdown&')
+def gplotps(event):
+ os.system('./GMT/gplotps&')
 #..................................................
 #import Tkinter
 
