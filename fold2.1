@@ -2,7 +2,6 @@
 import  csv
 import matplotlib.pyplot as plt
 from matplotlib import colors
-#from scipy.stats import gaussian_kde
 import numpy as np
 from tkinter import *
 import chart_studio.plotly as py
@@ -21,10 +20,10 @@ import os
 from CTkMessagebox import CTkMessagebox
 from customtkinter import CTkButton, CTk
 
-#----------------------------------------------------
 root = Tk()
 root.title('Fold Map')
 
+#--------------------------------------------------------
 def NewFile():
     tkMessageBox.showinfo("Computing the fold", "GO")
     print ("New File!")
@@ -50,7 +49,6 @@ filemenu.add_command(label="Exit", command=root.quit)
 helpmenu = Menu(menu)
 menu.add_cascade(label="Help",font=("Sans Bold", 9), menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
-
 #-------------------------------------
 photo = PhotoImage(file='geomagg3a.png')
 photo_label = Label(root, image=photo)
@@ -60,7 +58,7 @@ photo_label.grid()
 Label(root, text='Foldmap 2.1',font=("Sans Bold", 9)).grid(row=0,column=2,sticky=NW)
 Frame(root, bg="black",width=5, height=3)
 
-##### CMP COMPUTATION
+##### CMP COMPUTATION ###############################
 Label(root, text="CMP computation parameters  ",font=("Sans Bold", 10)).grid(row=1, column=1, sticky=W)
 #Label(root, text="       ").grid(row=3, column=3, sticky=E)
 Label(root, text="Water Depth (m):      ",font=("Sans Bold", 9)).grid(row=2, column=1,sticky='w')
@@ -79,7 +77,7 @@ Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=5, column=1,stic
 CompOffMax = DoubleVar()
 Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=5, column=2,sticky='w')
 CompOffMax.set("8000")
-#######
+########################################
 #---------------Raio buttoms wavefield------------------------------------------------
 #Label(root, text="       ").grid(row=7, column=3, sticky=E)
 v = IntVar()
@@ -186,7 +184,7 @@ def ShowChoice():
                   message="Hexagonal binning",icon="icons/hex.png")    
 
 Label(root, text="_______________________").grid(row=24, column=0,sticky=E)
-Label(root, text="_________________________________").grid(row=24, column=1,sticky=W)
+Label(root, text="_______________________________").grid(row=24, column=1,sticky=W)
 #Label(root, text="___________________________").grid(row=24, column=2,sticky=E)
 
 Label(root, text="""Binning options""",font=("Sans Bold", 9),fg = 'blue',
