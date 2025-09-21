@@ -50,7 +50,7 @@ helpmenu = Menu(menu)
 menu.add_cascade(label="Help",font=("Sans Bold", 9), menu=helpmenu)
 helpmenu.add_command(label="About...", command=About)
 #-------------------------------------
-photo = PhotoImage(file='geomagg3a.png')
+photo = PhotoImage(file='/home/mguima/DISK/DESIGN/Fold_2.1/ICONS/geomagg3a.png')
 photo_label = Label(root, image=photo)
 photo_label.image = photo 
 photo_label.grid()
@@ -64,19 +64,24 @@ Label(root, text="CMP computation parameters  ",font=("Sans Bold", 10)).grid(row
 Label(root, text="Water Depth (m):      ",font=("Sans Bold", 9)).grid(row=2, column=1,sticky='w')
 WaterDepth = DoubleVar()
 Entry(root, width=8, textvariable=WaterDepth,font=("Sans Bold", 9)).grid(row=2, column=2,sticky='w')
-WaterDepth.set("0")
+WaterDepth.set("2000")
 Label(root, text="Target Depth (m): ",font=("Sans Bold", 9)).grid(row=3, column=1,sticky='w')
 TargetDepth = DoubleVar()
 Entry(root, width=8, textvariable=TargetDepth,font=("Sans Bold", 9)).grid(row=3, column=2,sticky='w')
-TargetDepth.set("2000")
+TargetDepth.set("3000")
 Label(root, text="Vp/Vs: ",font=("Sans Bold", 9)).grid(row=4, column=1,sticky='w')
 VpVs = DoubleVar()
 Entry(root, width=8, textvariable=VpVs,font=("Sans Bold", 9)).grid(row=4, column=2,sticky='w')
 VpVs.set("3")
-Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=5, column=1,sticky='w')
+
+Label(root, text="Minoff (m): ",font=("Sans Bold", 9)).grid(row=5, column=1,sticky='w')
+CompOffMin = DoubleVar()
+Entry(root, width=8, textvariable=CompOffMin,font=("Sans Bold", 9)).grid(row=5, column=2,sticky='w')
+CompOffMin.set("0")
+Label(root, text="Maxoff (m): ",font=("Sans Bold", 9)).grid(row=6, column=1,sticky='w')
 CompOffMax = DoubleVar()
-Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=5, column=2,sticky='w')
-CompOffMax.set("8000")
+Entry(root, width=8, textvariable=CompOffMax,font=("Sans Bold", 9)).grid(row=6, column=2,sticky='w')
+CompOffMax.set("6000")
 ########################################
 #---------------Raio buttoms wavefield------------------------------------------------
 #Label(root, text="       ").grid(row=7, column=3, sticky=E)
@@ -122,7 +127,7 @@ Label(root, text="FOLD computation parameters",font=("Sans Bold", 10)).grid(row=
 Label(root, text="Bin size X : ",font=("Sans Bold", 9)).grid(row=12, column=1, sticky=W)
 Bx = DoubleVar()
 Entry(root, width=8, textvariable=Bx,font=("Sans Bold", 9)).grid(row=12, column=2, sticky=W)
-Bx.set("100")
+Bx.set("60")
 
 # Aprendi como alterar o outro campo ao preencher um !!!!!!!!!!!!!
 #Label(root, text="  Angle (degrees): ",font=("Sans Bold", 9)).grid(row=10, column=4, sticky=W)
@@ -133,23 +138,23 @@ Bx.set("100")
 Label(root, text="Bin size Y: ",font=("Sans Bold", 9)).grid(row=13, column=1, sticky=W)
 By = DoubleVar()
 Entry(root, width=8, textvariable=By,font=("Sans Bold", 9)).grid(row=13, column=2, sticky=W)
-By.set("100")
+By.set("75")
 Label(root, text="Angle (degrees): ",font=("Sans Bold", 9)).grid(row=14, column=1, sticky=W)
 angulo = DoubleVar()
 Entry(root, width=8, textvariable=angulo,font=("Sans Bold", 9)).grid(row=14, column=2, sticky=W)
-angulo.set("0.")
+angulo.set("24.")
 Label(root, text="Node space X (m): ",font=("Sans Bold", 9)).grid(row=15, column=1, sticky=W)
 NodeX = DoubleVar()
 Entry(root, width=8, textvariable=NodeX,font=("Sans Bold", 9)).grid(row=15, column=2, sticky=W)
-NodeX.set("400")
+NodeX.set("375")
 Label(root, text="Node space Y (m): ",font=("Sans Bold", 9)).grid(row=16, column=1, sticky=W)
 NodeY = DoubleVar()
 Entry(root, width=8, textvariable=NodeY,font=("Sans Bold", 9)).grid(row=16, column=2, sticky=W)
-NodeY.set("400")
+NodeY.set("325")
 Label(root, text="Range Maximum X (m): ",font=("Sans Bold", 9)).grid(row=17, column=1, sticky=W)
 RangeMax = DoubleVar()
 Entry(root, width=8, textvariable=RangeMax,font=("Sans Bold", 9)).grid(row=17, column=2, sticky=W)
-RangeMax.set("8000")
+RangeMax.set("6000")
 Label(root, text="Range Minimum Y (m): ",font=("Sans Bold", 9)).grid(row=18, column=1, sticky=W)
 RangeMin = DoubleVar()
 Entry(root, width=8, textvariable=RangeMin,font=("Sans Bold", 9)).grid(row=18, column=2, sticky=W)
@@ -271,10 +276,11 @@ def compcmp():
  vpvs=VpVs.get() 
  maxoff=RangeMax.get()  
  cmpmaxoff=CompOffMax.get()
+ cmpminoff=CompOffMin.get()
 
  opt =v.get()
  if var10.get() == 0:
-  c=Cmp(a1,a2,a3,a4,WD,TD,vpvs,cmpmaxoff,opt)
+  c=Cmp(a1,a2,a3,a4,WD,TD,vpvs,cmpminoff,cmpmaxoff,opt)
   print (c.getnnodes())
   print (c.getnshots())
    
@@ -661,7 +667,7 @@ class Cmp(object):
   import binascii
 
 
-  def __init__(self,xs,ys,xr,yr,wd,td,vpvs,maxoff,opt):
+  def __init__(self,xs,ys,xr,yr,wd,td,vpvs,minoff,maxoff,opt):
 
       import numpy as np
       import math
@@ -677,6 +683,7 @@ class Cmp(object):
       self.td = td
       self.vpvs = vpvs
       self.maxoff = maxoff
+      self.minoff = minoff
       self.opt =opt
 
       self.nnodes=len(self.xr)
@@ -730,7 +737,7 @@ class Cmp(object):
          dxs1= xx/(1+self.vpvs)
          dys1= yy/(1+self.vpvs)
 
-         if xoff <= self.maxoff:
+         if xoff <= self.maxoff and xoff >= self.minoff:
           xu=self.xr[i]+dxu
           yu=self.yr[i]+dyu
           xd=(self.xr[i])+dxd
